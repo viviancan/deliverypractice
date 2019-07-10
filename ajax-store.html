@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Store</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/ajax-store.css">
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Hammer & Co.m</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Pricing</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="jumbotron" id="cus-jumbotron">
+        <div class="about-div">
+            <h1>Hammer & Co</h1>
+            <h3>Tools and More</h3>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row mb-4">
+            <button type="button" class="btn btn-primary" id="refresh-button">Check for new Tools</button>
+        </div>
+
+        <div class="row">
+            <table class="table table-striped" id="products">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Categories</th>
+                    </tr>
+                </thead>
+                <tbody id="insertProducts"></tbody>
+            </table>
+        </div>
+    </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<!-- Your custom JS goes here -->
+
+<script>
+(function() {
+    "use strict";
+    console.log("tools data");
+
+    // ************ Sample Star Wars API request ************
+    // $.ajax("https://swapi.co/api/films").done(function(data){
+    //     console.log(data);
+    // });
+
+
+
+    // ************ Sample Get Request to Data Inventory ************
+    // $.ajax("data/inventory.json").done(function(data){
+    //     console.log(data);
+    // });
+
+
+    // Make Initial Ajax Request to load the tools to the page
+    makeAjaxRequest();
+
+
+    // Refresh Button Click
+    $("#refresh-button").click(function(){
+       console.log("refresh button clicked");
+        $("#insertProducts").html("");
+        makeAjaxRequest();
+    });
+
+
+    // Function to make Ajax Request
+    function makeAjaxRequest(){
+        var url = "data/inventory.json";
+
+        var request = $.get(url);
+
+        request.fail(function(jqXhr, status, error) {
+            console.log("Response status: " + status);
+            console.log("Error object: " + error);
+        });
+
+        request.done(function(data, status) {
+            addToolsToTable(data);
+            console.log(data)
+            console.log(status);
+            return data
+        });
+
+    }
+
+    function addToolsToTable(tools) {
+        var htmlString = "";
+        tools.forEach(function(tool) {
+            htmlString += "<tr>";
+            htmlString += "<td>" + tool.title + "</td>";
+            htmlString += "<td>" + tool.quantity + "</td>";
+            htmlString += "<td>" + tool.price + "</td>";
+            htmlString += "<td>" + tool.categories.join(", ") + "</td>";
+            htmlString += "</tr>";
+        });
+
+        $("#insertProducts").append(htmlString);
+    }
+
+
+
+
+
+
+})();
+</script>
+
+</body>
+</html>
