@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <title>Weather Map Project</title>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.css' rel='stylesheet' />
+
+        <link rel="stylesheet" href="css/weather-map.css">
+    </head>
+    <body>
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <h1>Weather Map!</h1>
+            </div>
+            
+            <div class="row">
+                <div class="form-inline">
+                    <label for="lat">Latitude</label>
+                    <input type="text" class="form-control" id="lat">
+
+                    <label for="lon">Longitude</label>
+                    <input type="text" class="form-control" id="lon">
+
+                    <button type="submit" id="lat-lon-submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <h2 id="location"></h2>
+            </div>
+
+            <div class="row text-center" id="weather"></div>
+
+            <div class="row text-center">
+                <div id="map"></div>
+            </div>
+        </div>
+
+
+
+        <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+        <script src="js/keys.js"></script>
+        <script src="js/mapbox-utils.js"></script>
+        <script>
+
+            (function() {
+                "use strict";
+
+                var globalWeather;
+                var climacons = [
+                    {
+                        name: "clear-day",
+                        imgUrl: "img/climacons/Sun.svg"
+                    },
+                    {
+                        name: "clear-night",
+                        imgUrl: "img/climacons/Moon.svg"
+                    },
+                    {
+                        name: "rain",
+                        imgUrl: "img/climacons/Cloud-Rain.svg"
+                    },
+                    {
+                        name: "snow",
+                        imgUrl: "img/climacons/Snowflake.svg"
+                    },
+                    {
+                        name: "sleet",
+                        imgUrl: "img/climacons/Snowflake.svg"
+                    },
+,
+                    {
+                        name: "wind",
+                        imgUrl: "img/climacons/Wind.svg"
+                    },
+,
+                    {
+                        name: "fog",
+                        imgUrl: "img/climacons/Cloud-Fog.svg"
+                    },
+                    {
+                        name: "cloudy",
+                        imgUrl: "img/climacons/Cloud.svg"
+                    },
+                    {
+                        name: "partly-cloudy-day",
+                        imgUrl: "img/climacons/Cloud-Sun.svg"
+                    },
+                    {
+                        name: "partly-cloudy-night",
+                        imgUrl: "img/climacons/Cloud-Moon.svg"
+                    }
+
+                ];
+
+                loadWeatherData();
+
+                function loadWeatherData(){
+                    var requestUrl = makeDarkSkyUrl();
+                    makeWeatherRequest(requestUrl);
+                    makemap();
+                }
+
+                function makeDarkSkyUrl() {
+                    // Dark sky request url from darksky docs
+                    // https://api.darksky.net/forecast/[key]/[latitude],[longitude]
+
+                    var apiKey = darkSkyKey;
+                    var inputLatitude = "29.426780";
+                    var inputLongitude = "-98.489570";
+                    var baseUrl = "https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/";
+                    var parameters = "?units=us";
+
+                    return  baseUrl + apiKey + "/" + inputLatitude + "," + inputLongitude + parameters;
+                }
+
+                function makeDarkSkyUrlWithLatLng(userLat, userLng) {
+                    // Dark sky request url from darksky docs
+                    // https://api.darksky.net/forecast/[key]/[latitude],[longitude]
+
+                    var apiKey = darkSkyKey;
+                    var inputLatitude = userLat;
+                    var inputLongitude = userLng;
+                    var baseUrl = "https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/";
+                    var parameters = "?units=us";
+
+                    return  baseUrl + apiKey + "/" + inputLatitude + "," + inputLongitude + parameters;
+                }
+
+                // function processWeatherData(data){
+                //     console.log(data);
+                //     var dailyData = data.daily.data;
+                //     console.log(dailyData);
+                //     var html = '';
+                //
+                //     dailyData.forEach(function (day, ) {
+                //         console.log(day);
+                //
+                //         html += "<div class='col-sm-12'>";
+                //         html += "<div>" + convertTimeUsingMoment(day.time) + "</div>";
+                //         html += "<div>" + day.temperatureHigh + "&#176;/" + day.temperatureLow + "&#176;</div>";
+                //         html += "<div><strong>" + capitalizeFirstLetter(day.precipType) + ":</strong> " + day.summary + "</div>";
+                //         html += "<div> <strong>Humidity: </strong>" + day.humidity + "</div>";
+                //         html += "<div> <strong>Wind: </strong>" + day.windSpeed + "</div>";
+                //         html += "<div> <strong>Pressure: </strong>" + day.pressure + "</div>";
+                //         html += "<hr>";
+                //         html += "</div>";
+                //     });
+                //
+                //     $("#weather").html(html);
+                //
+                // }
+
+
+                function processWeatherData(data){
+                    var dailyData = data.daily.data;
+
+                    console.log(data);
+                    console.log(dailyData);
+
+                    var html = '';
+
+                    var i;
+                    for (i = 0; i < 3; i++) {
+                        html += "<div class='col-sm-4'>";
+                        html += "<div>" + convertTimeUsingMoment(dailyData[i].time) + "</div>";
+                        html += "<div>" + dailyData[i].temperatureHigh + "&#176;/" + dailyData[i].temperatureLow + "&#176;</div>";
+                        html += "<div>" + processWeatherIcon(dailyData[i].icon)+"</div>";
+                        html += "<div><strong>" + capitalizeFirstLetter(dailyData[i].precipType) + ":</strong> " + dailyData[i].summary + "</div>";
+                        html += "<div> <strong>Humidity: </strong>" + dailyData[i].humidity + "</div>";
+                        html += "<div> <strong>Wind: </strong>" + dailyData[i].windSpeed + "</div>";
+                        html += "<div> <strong>Pressure: </strong>" + dailyData[i].pressure + "</div>";
+                        html += "</div>";
+                    }
+                    $("#weather").html(html);
+                }
+
+                function processWeatherIcon(icon){
+                    switch (icon){
+                        case 'clear-day':
+                            return '<img src="img/climacons/Sun.svg" alt="">';
+
+                        case 'clear-night':
+                            return '<img src="img/climacons/Moon.svg" alt="">';
+
+                        case 'rain':
+                            return '<img src="img/climacons/Cloud-Rain.svg" alt="">';
+
+                        case 'snow':
+                            return '<img src="img/climacons/Snowflake.svg" alt="">';
+
+                        case 'wind':
+                            return '<img src="img/climacons/Wind.svg" alt="">';
+
+                        case 'fog':
+                            return '<img src="img/climacons/Cloud-fog.svg" alt="">';
+
+                        case 'cloudy':
+                            return '<img src="img/climacons/Cloud.svg" alt="">';
+
+                        case 'partly-cloudy-day':
+                            return '<img src="img/climacons/Cloud-Sun.svg" alt="">';
+
+                        case 'partly-cloudy-night':
+                            return '<img src="img/climacons/Cloud-Moon.svg" alt="">';
+                    }
+                }
+
+                function convertTime(timestamp){
+                    var dateObject = new Date(timestamp * 1000);
+                    return dateObject.toString();
+                }
+
+                function convertTimeUsingMoment(timestamp){
+                   return  moment(timestamp * 1000).format("dddd MMMM Do, YYYY");
+                }
+
+                function capitalizeFirstLetter(string) {
+                    return string.charAt(0).toUpperCase() + string.slice(1);
+                }
+
+                $("#lat-lon-submit").click(function () {
+                    console.log("lat long clicked!");
+                    var userLatInput = $("#lat").val();
+                    var userLonInput = $("#lon").val();
+
+                    console.log(userLatInput);
+                    console.log(userLonInput);
+
+                    var requestUrl = makeDarkSkyUrlWithLatLng(userLatInput, userLonInput);
+                    makeWeatherRequest(requestUrl);
+                    updateMap(userLatInput, userLonInput);
+                });
+
+                function makemap(){
+
+                    mapboxgl.accessToken = mapboxToken;
+
+                    var map = new mapboxgl.Map({
+                        container: 'map',
+                        style: 'mapbox://styles/mapbox/streets-v9',
+                        center: [-98.489570,29.426780],
+                        zoom: 10
+                    });
+
+                    map.addControl(new mapboxgl.NavigationControl());
+
+                    var marker = new mapboxgl.Marker({
+                        draggable: true
+                    })
+                        .setLngLat([-98.489570,29.426780])
+                        .addTo(map);
+
+                    function onDragEnd() {
+                        var lngLat = marker.getLngLat();
+                        console.log(lngLat.lng);
+                        console.log(lngLat.lat);
+
+                        var userLatInput = lngLat.lat;
+                        var userLonInput =  lngLat.lng;
+
+                        var requestUrl = makeDarkSkyUrlWithLatLng(userLatInput, userLonInput);
+                        makeWeatherRequest(requestUrl);
+                        updateMap(userLatInput, userLonInput);
+                    }
+
+                    marker.on('dragend', onDragEnd);
+                }
+
+                function updateMap(userInputLat, userInputLng){
+
+                    mapboxgl.accessToken = mapboxToken;
+
+                    var map = new mapboxgl.Map({
+                        container: 'map',
+                        style: 'mapbox://styles/mapbox/streets-v9',
+                        center: [userInputLng,userInputLat],
+                        zoom: 10
+                    });
+
+                    map.addControl(new mapboxgl.NavigationControl());
+
+                    var marker = new mapboxgl.Marker({
+                        draggable: true
+                    })
+                        .setLngLat([userInputLng,userInputLat])
+                        .addTo(map);
+
+                    function onDragEnd() {
+                        var lngLat = marker.getLngLat();
+                        console.log(lngLat.lng);
+                        console.log(lngLat.lat);
+
+                        var userLatInput = lngLat.lat;
+                        var userLonInput =  lngLat.lng;
+
+                        var requestUrl = makeDarkSkyUrlWithLatLng(userLatInput, userLonInput);
+                        makeWeatherRequest(requestUrl);
+                        updateMap(userLatInput, userLonInput);
+                    }
+
+                    marker.on('dragend', onDragEnd);
+                }
+
+
+                function makeWeatherRequest(requestUrl){
+                    $.get(requestUrl).done(function(data) {
+                        globalWeather = data;
+                        processWeatherData(data);
+                    });
+                }
+
+            })();
+
+        </script>
+
+
+    </body>
+</html>
