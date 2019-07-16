@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Map Walkthough 1</title>
+
+    <!--    Bootstrap CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <!--  Mapbox Regular CSS && Geocoder CSS  -->
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.css' type='text/css' />
+
+    <style>
+        #map {
+            /* the width and height may be set to any size */
+            top:50px;
+            width:100%;
+            height: 500px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <h1>Weather Map!</h1>
+        </div>
+
+<!--        <div class="row">-->
+<!--            <div class="form-inline">-->
+<!--                <label for="lat">Latitude</label>-->
+<!--                <input type="text" class="form-control" id="lat">-->
+
+<!--                <label for="lon">Longitude</label>-->
+<!--                <input type="text" class="form-control" id="lon">-->
+
+<!--                <button type="submit" id="lat-lon-submit" class="btn btn-primary">Submit</button>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="row">
+            <h2 id="location"></h2>
+        </div>
+
+        <div class="row text-center" id="weather"></div>
+
+        <div class="row text-center">
+            <div id="map"></div>
+        </div>
+    </div>
+
+
+
+
+    <!--JQUERY-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <!-- MAPBOX JS   -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.min.js'></script>
+
+    <!-- BOOTSTRAP JS-->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+
+    <script src="js/mapbox-utils.js"></script>
+
+    <!-- KEYS.JS  -->
+    <script src="js/keys.js"></script>
+
+
+    <!--Custom Script-->
+    <script>
+        (function () {
+            "use strict";
+            console.log("script running!!");
+
+            runWeatherProcess(29.426780, -98.489570);
+            makemap(29.426780, -98.489570);
+
+
+            function runWeatherProcess(inputLatitude, inputLongitude){
+                var requestUrl = makeDarkSkyUrl(inputLatitude, inputLongitude);
+                makeWeatherRequest(requestUrl);
+
+                reverseGeocode({lat: inputLatitude, lng: inputLongitude}, mapboxToken).then(function(results) {
+                    var locationNames = results.features;
+                    var location;
+
+                    var i;
+                    for(i = 0; i < locationNames.length; i++){
+                        var locationId = locationNames[i].id;
+
+                        if(locationId.includes("place")){
+                            location = results.features[i].place_name;
+                            $("#location").html(location);
+                            break;
+                        } else {
+                            $("#location").html("Location Unknown!");
+                        }
+                    }
+                });
+
+            }
+
+            function makeDarkSkyUrl(inputLatitude,inputLongitude) {
+                // Dark sky request url from darksky docs
+                // https://api.darksky.net/forecast/[key]/[latitude],[longitude]
+
+                var apiKey = darkSkyKey;
+                var baseUrl = "https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/";
+                var parameters = "?units=us";
+
+                return  baseUrl + apiKey + "/" + inputLatitude + "," + inputLongitude + parameters;
+            }
+
+
+            function makeWeatherRequest(requestUrl){
+                $.get(requestUrl).done(function(data) {
+                    console.log(">>>>>> MAKING WEATHER REQUEST!!!");
+                    console.log(data);
+                    processWeatherData(data);
+                });
+            }
+
+
+            function processWeatherData(data){
+                var dailyData = data.daily.data;
+
+                console.log(">>>>>> PROCESSING WEATHER DATA!");
+
+                console.log(dailyData);
+
+                var html = '';
+
+                var i;
+                for (i = 0; i < 3; i++) {
+                    html += "<div class='col-sm-4'>";
+                    html += "<div>" + convertTimeUsingMoment(dailyData[i].time) + "</div>";
+                    html += "<div>" + dailyData[i].temperatureHigh + "&#176;/" + dailyData[i].temperatureLow + "&#176;</div>";
+                    html += "<div>" + processWeatherIcon(dailyData[i].icon)+"</div>";
+                    // html += "<div><strong>" + capitalizeFirstLetter(dailyData[i].precipType) + ":</strong> " + dailyData[i].summary + "</div>";
+                    html += "<div>"+ dailyData[i].summary + "</div>";
+                    html += "<div> <strong>Humidity: </strong>" + dailyData[i].humidity + "</div>";
+                    html += "<div> <strong>Wind: </strong>" + dailyData[i].windSpeed + "</div>";
+                    html += "<div> <strong>Pressure: </strong>" + dailyData[i].pressure + "</div>";
+                    html += "</div>";
+                }
+                $("#weather").html(html);
+            }
+
+            function convertTimeUsingMoment(timestamp){
+                return  moment(timestamp * 1000).format("dddd MMMM Do, YYYY");
+            }
+
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+
+            function processWeatherIcon(icon){
+                switch (icon){
+                    case 'clear-day':
+                        return '<img src="img/climacons/Sun.svg" alt="">';
+
+                    case 'clear-night':
+                        return '<img src="img/climacons/Moon.svg" alt="">';
+
+                    case 'rain':
+                        return '<img src="img/climacons/Cloud-Rain.svg" alt="">';
+
+                    case 'snow':
+                        return '<img src="img/climacons/Snowflake.svg" alt="">';
+
+                    case 'wind':
+                        return '<img src="img/climacons/Wind.svg" alt="">';
+
+                    case 'fog':
+                        return '<img src="img/climacons/Cloud-fog.svg" alt="">';
+
+                    case 'cloudy':
+                        return '<img src="img/climacons/Cloud.svg" alt="">';
+
+                    case 'partly-cloudy-day':
+                        return '<img src="img/climacons/Cloud-Sun.svg" alt="">';
+
+                    case 'partly-cloudy-night':
+                        return '<img src="img/climacons/Cloud-Moon.svg" alt="">';
+                }
+            }
+
+            function makemap(inputLatitude, inputLongitude){
+
+                mapboxgl.accessToken = mapboxToken;
+
+                var map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/streets-v9',
+                    center: [inputLongitude,inputLatitude],
+                    zoom: 10
+                });
+
+                map.addControl(new mapboxgl.NavigationControl());
+
+                var marker = new mapboxgl.Marker({
+                    draggable: true
+                })
+                    .setLngLat([inputLongitude, inputLatitude])
+                    .addTo(map);
+
+                function onDragEnd() {
+                    var lngLat = marker.getLngLat();
+                    console.log(lngLat.lng);
+                    console.log(lngLat.lat);
+
+                    var userLatInput = lngLat.lat;
+                    var userLonInput =  lngLat.lng;
+
+                    runWeatherProcess(userLatInput, userLonInput);
+                    map.flyTo({center:[userLonInput, userLatInput]});
+                }
+
+                marker.on('dragend', onDragEnd);
+
+
+                var geocoder = new MapboxGeocoder({
+                    accessToken: mapboxgl.accessToken,
+                    mapboxgl: mapboxgl
+                });
+
+                map.addControl(geocoder);
+
+
+                geocoder.on('results', function(e) {
+                    console.log("results!!!");
+                    console.log(e);
+                });
+
+
+                geocoder.on('result', function(e) {
+                    console.log('>>>>>in the result fxn!!!');
+                    console.log(e);
+                    console.log(e.result.geometry.coordinates);
+
+                    var userLatInput = e.result.geometry.coordinates[1];
+                    var userLonInput =  e.result.geometry.coordinates[0];
+
+                    runWeatherProcess(userLatInput, userLonInput);
+                    map.flyTo({center:[userLonInput, userLatInput]});
+
+                    // marker.setLngLat([inputLongitude, inputLatitude]);
+                    // marker.addTo(map);
+                });
+
+                $("#lat-lon-submit").click(function () {
+                    console.log("lat long clicked!");
+                    var userLatInput = $("#lat").val();
+                    var userLonInput = $("#lon").val();
+
+                    console.log(userLatInput);
+                    console.log(userLonInput);
+                    runWeatherProcess(userLatInput, userLonInput);
+                    map.flyTo({center:[userLonInput, userLatInput]});
+
+                });
+            }
+
+        })();
+    </script>
+</body>
+</html>
