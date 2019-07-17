@@ -132,9 +132,7 @@
 
             function processWeatherData(data){
                 var dailyData = data.daily.data;
-
                 console.log(">>>>>> PROCESSING WEATHER DATA!");
-
                 console.log(dailyData);
 
                 var html = '';
@@ -221,6 +219,8 @@
                     var userLatInput = lngLat.lat;
                     var userLonInput =  lngLat.lng;
 
+                    $(".mapboxgl-ctrl-geocoder mapboxgl-ctrl").val("");
+
                     runWeatherProcess(userLatInput, userLonInput);
                     map.flyTo({center:[userLonInput, userLatInput]});
                 }
@@ -230,11 +230,11 @@
 
                 var geocoder = new MapboxGeocoder({
                     accessToken: mapboxgl.accessToken,
-                    mapboxgl: mapboxgl
+                    mapboxgl: mapboxgl,
+                    marker: false
                 });
 
                 map.addControl(geocoder);
-
 
                 geocoder.on('results', function(e) {
                     console.log("results!!!");
@@ -244,17 +244,13 @@
 
                 geocoder.on('result', function(e) {
                     console.log('>>>>>in the result fxn!!!');
-                    console.log(e);
-                    console.log(e.result.geometry.coordinates);
-
                     var userLatInput = e.result.geometry.coordinates[1];
                     var userLonInput =  e.result.geometry.coordinates[0];
 
+                    marker.setLngLat([userLonInput, userLatInput]);
+                    marker.addTo(map);
                     runWeatherProcess(userLatInput, userLonInput);
-                    map.flyTo({center:[userLonInput, userLatInput]});
 
-                    // marker.setLngLat([inputLongitude, inputLatitude]);
-                    // marker.addTo(map);
                 });
 
                 $("#lat-lon-submit").click(function () {
