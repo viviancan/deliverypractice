@@ -61,6 +61,10 @@ h2{
         display: none;
     }
 
+    .nav-links{
+        margin-top: 0;
+    }
+
     .nav-links li {
         display: inline-block;
         background-color: white;
