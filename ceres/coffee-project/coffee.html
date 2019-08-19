@@ -8,56 +8,49 @@
 </head>
 <body>
 
-<div class="jumbotron jumbotron-fluid">
+    <div id="main">
+        <div class="jumbotron jumbotron-fluid">
 
-    <video autoplay muted loop poster="https://dummyimage.com/900x400/000/fff">
-        <source src="videos/coffee.mp4" type="video/mp4">
-    </video>
+            <video autoplay muted loop poster="https://dummyimage.com/900x400/000/fff">
+                <source src="videos/coffee.mp4" type="video/mp4">
+            </video>
 
-    <div class="container text-white">
-        <h1 class="display-4">The Asteroid Belt</h1>
-        <p class="lead">Out of this world coffee and more</p>
-    </div>
-</div>
+            <div class="container text-white">
+                <h1 class="display-4">The Asteroid Belt</h1>
+                <p class="lead">Out of this world coffee and more</p>
+            </div>
 
+            <div class="container text-white">
 
-<div class="container">
+                <div class="col-sm">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group col-sm-4">
+                                <label for="roast-selection">Select Roast</label>
 
-    <div class="row">
-        <div class="col-sm">
-            <div id="coffees"></div>
+                                <select id="roast-selection" class="form-control">
+                                    <option>all</option>
+                                    <option>light</option>
+                                    <option>medium</option>
+                                    <option>dark</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-6 offset-sm-2">
+                                    <label for="coffeeInput">Coffee Name</label>
+                                    <input type="text" class="form-control" id="coffeeInput" placeholder="Search for a coffee">
+                            </div>
+                        </div>
+        <!--                <button class="btn btn-primary" id="submit" type="submit">Submit</button>-->
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <div class="col-sm">
-            <form>
-                <div class="form-group">
-                    <label for="roast-selection">Roast</label>
-
-                    <select id="roast-selection">
-                        <option>all</option>
-                        <option>light</option>
-                        <option>medium</option>
-                        <option>dark</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="coffeeInput">Coffee Name</label>
-                    <input type="text" class="form-control" id="coffeeInput" placeholder="Search for a coffee">
-                </div>
-
-
-                <button class="btn btn-primary" id="submit" type="submit">Submit</button>
-            </form>
+        <div class="container">
+                <div id="coffees" class="row"></div>
         </div>
-
     </div>
 
-
-
-
-
-</div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
