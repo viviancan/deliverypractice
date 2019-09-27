@@ -38,6 +38,7 @@ function updateCoffees(e) {
 }
 
 function searchCoffees(e){
+    console.log(e);
     e.preventDefault();
     var coffeeSearchInput = document.getElementById("coffeeInput").value;
     console.log(coffeeSearchInput);

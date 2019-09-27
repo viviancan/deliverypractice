@@ -32,8 +32,11 @@ let githubRequest = (username) => {
     return fetch(githubEventEndpoint, {
         headers: {'Authorization': `token ${githubToken}`}
     })
-    .then(response => response.json())
-    .then(ghStats => {
+    .then(response => {
+        console.log(response.body);
+        return response.json()
+    }).then(ghStats => {
+        console.log(ghStats);
         // const pushEvents = ghStats.filter( (stat) => {
         //     return stat.type == "PushEvent"
         // })
