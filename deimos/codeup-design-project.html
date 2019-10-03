@@ -98,28 +98,128 @@
 		#header-background{
 			background-color: white;
 			height: 75px;
-			padding: 0px;
+			width: 100%;
 		}
+
+		.sm-only{
+			display: none;
+		}
+
+		.xs-none{
+			display: none;
+		}
+
+
+
+		@media (min-width: 576px) {
+			.xs-only{
+				display: none;
+			}
+
+
+			.xs-none{
+				display: block;
+			}
+
+			.sm-only{
+				display: flex;
+			}
+
+			.small-nav-item{
+				font-family: 'Abel', sans-serif;
+			}
+
+			.small-nav-item-row{
+				padding-top: 25px;
+			}
+
+			#custom #visual-and-web-design{
+				font-size: 48px;
+				margin-bottom: 0px;
+			}
+
+			#custom #horizontal-line{
+				background-color: #E6E6E6;
+				height: 1px;
+				width: 55%;
+				/*border-top: 0px*/
+				border: 1px solid #d5d5d5;
+			}
+
+			.work-circle > span{
+				font-size: .5rem;
+			}
+
+			#four-images .image-container{
+				height: 148px;
+			}
+
+		/*	.image-container  .img-fluid {*/
+		/*		display: block;*/
+		/*		width: auto;*/
+		/*		max-height: 100%;*/
+		/*	}*/
+		/*}*/
 
 	</style>
 </head>
 <body id="custom">
-		<div class="row mt-5 no-gutters">
-			<div class="col-12 text-center">
-				<div id="header-background">
-					<img id="img-logo" class="img-fluid mx-auto rounded-circle" src="logo.jpg" alt="">
-				</div>
+
+	<div class="row mt-5 no-gutters xs-only" id="xs-header">
+		<div class="col-12 text-center">
+			<div id="header-background">
+				<img id="img-logo" class="img-fluid mx-auto rounded-circle" src="logo.jpg" alt="">
 			</div>
 		</div>
-	<div class="container-fluid">
+	</div>
 
+	<div class="row mt-5 no-gutters sm-only" id="small-header">
+		<div class="col-12 text-center">
+			<div id="header-background">
+				<div class="row">
+
+					<div class="col-5">
+						<div class="row small-nav-item-row">
+							<div class="col-4 offset-3 small-nav-item">
+								SERVICES
+							</div>
+							<div class="col-4 small-nav-item">
+								WORK
+							</div>
+						</div>
+					</div>
+
+					<div class="col-2">
+						<img id="img-logo" class="img-fluid mx-auto rounded-circle" src="logo.jpg" alt="">
+
+					</div>
+
+					<div class="col-5">
+						<div class="row small-nav-item-row">
+							<div class="col-4 small-nav-item">
+								BLOG
+							</div>
+							<div class="col-4 small-nav-item">
+								CONTACT
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<div class="container-fluid">
 		<div class="row mt-5">
 			<div class="col-12 text-center">
 				<h3 class="font-abel">codeup design</h3>
 			</div>
 		</div>
 
-		<div class="row mt-3">
+		<div class="row mt-3 xs-only" id="xs-navlinks">
 			<div class="col-10 offset-1">
 				<div class="row text-center no-gutters">
 					<div class="col-3 services-text">SERVICES</div>
@@ -132,7 +232,7 @@
 
 		<div class="row mt-5">
 			<div class="col-12 text-center font-anton">
-				<h3>VISUAL DESIGN & WEB DEVELOPMENT</h3>
+				<h3 id="visual-and-web-design">VISUAL DESIGN & WEB DEVELOPMENT</h3>
 			</div>
 		</div>
 
@@ -168,19 +268,199 @@
 			</div>
 		</div>
 
-		<div class="row mt-5">
+		<div class="row">
+			<hr class="sm-only" id="horizontal-line">
+		</div>
+
+		<div class="row mt-5 mb-5">
 			<div class="col-12 text-center">
 				<span class="font-abel font-1-3rem">SELECTED WORK</span>
 			</div>
 		</div>
 
-		<div class="row mb-3">
-			<div class="col-12">
-				<img class="img-fluid rounded border border-dark" src="images/apple-ipad.jpg" alt="">
+		<div class="row mb-3 mt-5 no-gutters" id="four-images">
+
+			<div class="row d-flex justify-content-center">
+				<div class="col-12 col-sm-4">
+
+					<div class="image-container">
+						<img class="img-fluid rounded border border-dark" src="images/apple-ipad.jpg" alt="">
+					</div>
+
+					<div class="row mt-4 mb-5 no-gutters sm-only little-icons">
+
+						<div class="col-7">
+							<span class="font-1-rem font-abel">FEATURED PROJECT</span>
+						</div>
+						<div class="col-5">
+							<div class="row no-gutters">
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle red-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">D</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle yellow-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">D</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle green-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">S</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle blue-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">H</span>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+
+				<div class="col-sm-4 xs-none">
+
+					<div class="image-container">
+						<img class="img-fluid rounded border border-dark" src="images/macbook.jpg" alt="">
+					</div>
+
+					<div class="row mb-5 mt-4 no-gutters sm-only little-icons">
+
+						<div class="col-7">
+							<span class="font-1-rem font-abel">FEATURED PROJECT</span>
+						</div>
+						<div class="col-5">
+							<div class="row no-gutters">
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle red-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">D</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle yellow-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">D</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle green-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">S</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle blue-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">H</span>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
 			</div>
+
+			<div class="row d-flex justify-content-center">
+				<div class="col-sm-4 xs-none">
+					<div class="image-container">
+						<img class="img-fluid rounded border border-dark" src="images/security.jpg" alt="">
+					</div>
+
+					<div class="row mb-5 mt-4 no-gutters sm-only little-icons">
+
+						<div class="col-7">
+							<span class="font-1-rem font-abel">FEATURED PROJECT</span>
+						</div>
+						<div class="col-5">
+							<div class="row no-gutters">
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle red-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">D</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle yellow-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">D</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle green-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">S</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle blue-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">H</span>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="col-sm-4 xs-none">
+					<div class="image-container">
+						<img class="img-fluid rounded border border-dark" src="images/man.jpg" alt="">
+					</div>
+
+					<div class="row mb-5 mt-4 no-gutters sm-only little-icons">
+
+						<div class="col-7">
+							<span class="font-1-rem font-abel">FEATURED PROJECT</span>
+						</div>
+						<div class="col-5">
+							<div class="row no-gutters">
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle red-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">D</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle yellow-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">D</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle green-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">S</span>
+									</div>
+								</div>
+
+								<div class="col-3 d-flex justify-content-end">
+									<div class="work-circle blue-circle rounded-circle text-center justify-content-center d-flex align-items-center ">
+										<span class="">H</span>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+
 		</div>
 
-	<div class="row mb-5">
+	<div class="row mb-5 xs-only">
 		<div class="col-6">
 			<span class="font-1-rem font-abel">FEATURED PROJECT</span>
 		</div>
@@ -212,7 +492,6 @@
 
 			</div>
 		</div>
-		
 	</div>
 
 
