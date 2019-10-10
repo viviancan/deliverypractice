@@ -101,7 +101,7 @@
 			width: 100%;
 		}
 
-		.sm-only{
+		.sm-only, .md-only{
 			display: none;
 		}
 
@@ -112,33 +112,33 @@
 
 
 		@media (min-width: 576px) {
-			.xs-only{
+			.xs-only {
 				display: none;
 			}
 
 
-			.xs-none{
+			.xs-none {
 				display: block;
 			}
 
-			.sm-only{
+			.sm-only {
 				display: flex;
 			}
 
-			.small-nav-item{
+			.small-nav-item {
 				font-family: 'Abel', sans-serif;
 			}
 
-			.small-nav-item-row{
+			.small-nav-item-row {
 				padding-top: 25px;
 			}
 
-			#custom #visual-and-web-design{
+			#custom #visual-and-web-design {
 				font-size: 48px;
 				margin-bottom: 0px;
 			}
 
-			#custom #horizontal-line{
+			#custom #horizontal-line {
 				background-color: #E6E6E6;
 				height: 1px;
 				width: 55%;
@@ -146,20 +146,35 @@
 				border: 1px solid #d5d5d5;
 			}
 
-			.work-circle > span{
+			.work-circle > span {
 				font-size: .5rem;
 			}
 
-			#four-images .image-container{
+			#four-images .image-container {
 				height: 148px;
 			}
 
-		/*	.image-container  .img-fluid {*/
-		/*		display: block;*/
-		/*		width: auto;*/
-		/*		max-height: 100%;*/
-		/*	}*/
-		/*}*/
+		}
+
+		@media (min-width: 768px) {
+			.md-only{
+				display: flex;
+			}
+
+			.sm-only{
+				display: none;
+			}
+
+
+			.medium-none{
+				display: none;
+			}
+
+			#codeup-design-medium{
+				padding-top: 10px;
+			}
+
+		}
 
 	</style>
 </head>
@@ -179,7 +194,7 @@
 				<div class="row">
 
 					<div class="col-5">
-						<div class="row small-nav-item-row">
+						<div class="row small-nav-item-row no-gutters">
 							<div class="col-4 offset-3 small-nav-item">
 								SERVICES
 							</div>
@@ -191,7 +206,6 @@
 
 					<div class="col-2">
 						<img id="img-logo" class="img-fluid mx-auto rounded-circle" src="logo.jpg" alt="">
-
 					</div>
 
 					<div class="col-5">
@@ -211,9 +225,60 @@
 		</div>
 	</div>
 
+	<div class="row mt-5 md-only no-gutters" id="medium-header">
+		<div class="col-12 text-center">
+			<div id="header-background">
+				<div class="row no-gutters">
+
+
+					<div class="col-md-2">
+						<img id="img-logo" class="img-fluid mx-auto rounded-circle" src="logo.jpg" alt="">
+					</div>
+
+					<div class="col-md-4">
+							<h3 class="font-abel" id="codeup-design-medium">codeup design</h3>
+					</div>
+
+					<div class="col offset-md-1">
+						<div class="row small-nav-item-row no-gutters text-center">
+
+							<div class="col small-nav-item">
+								SERVICES
+							</div>
+
+							<div class="col small-nav-item">
+								WORK
+							</div>
+
+							<div class="col small-nav-item">
+								BLOG
+							</div>
+
+							<div class="col small-nav-item">
+								CONTACT
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+
+
+
+
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 
 	<div class="container-fluid">
-		<div class="row mt-5">
+		<div class="row mt-5 medium-none" id="codeup-design-header">
 			<div class="col-12 text-center">
 				<h3 class="font-abel">codeup design</h3>
 			</div>
